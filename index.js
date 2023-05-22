@@ -3,13 +3,7 @@ const movieListSection = document.getElementById('movie-list-section')
 const searchInput = document.getElementById('search-input')
 const clearPage = document.getElementById('clear-page')
 
-// const loader = document.getElementById('pre-loader')
-
 let myWatchlist = []
-
-// window.addEventListener('load', () => {
-//     loader.style.display = "none"
-// })
 
 document.addEventListener('click', e => {
     if (e.target === searchBtn) {
