@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
+        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/index.css">
+    <title>Movie Watchlist</title>
+</head>
+
+<body>
+    <header>
+        <div class="header-text">
+            <h1>Find your film</h1>
+            <p class="my-watchlist">
+                <a id="my-watchlist" href="watchlist.html">
+                    My Watchlist
+                </a>
+            </p>
+        </div>
+
+        <div class="search-bar">
+            <div class="fontsearch">
+                <input id="search-input" type="search" placeholder="Search for a movie" /><i
+                    class="fa fa-solid fa-magnifying-glass"></i>
+            </div>
+            <button id="search-btn" type="submit">Search</button>
+        </div>
+    </header>
+
+    <main id="movie-list-section" class="clear-height">
+        <!-- <div id="pre-loader"></div> -->
+        <div id="clear-page" class="clear-page">
+            <i class="fa-solid fa-film fa-4x"></i>
+            <p>Start exploring</p>
+        </div>
+    </main>
+
+    <script src="index.js" type="module"></script>
+</body>
+
+</html>
