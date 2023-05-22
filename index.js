@@ -35,7 +35,7 @@ document.addEventListener('click', e => {
 
 async function search(inputValue) {
 
-    const response = await fetch(`http://www.omdbapi.com/?apikey=6c14968&s=${inputValue}`)
+    const response = await fetch(`https://www.omdbapi.com/?apikey=6c14968&s=${inputValue}`)
 
     const data = await response.json()
 
@@ -50,7 +50,7 @@ async function getMovieDetails(idArr) {
     let movieObj = []
 
     for (let i = 0; i < idArr.length; i++) {
-        const response = await fetch(`http://www.omdbapi.com/?apikey=6c14968&i=${idArr[i]}`)
+        const response = await fetch(`https://www.omdbapi.com/?apikey=6c14968&i=${idArr[i]}`)
         const data = await response.json()
         movieObj.push(data)
     }
@@ -117,7 +117,7 @@ function addMovie(data) {
 
 async function addWatchlist(id) {
 
-    const response = await fetch(`http://www.omdbapi.com/?apikey=6c14968&i=${id}`)
+    const response = await fetch(`https://www.omdbapi.com/?apikey=6c14968&i=${id}`)
 
     const data = await response.json()
 
