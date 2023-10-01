@@ -1,86 +1,83 @@
-const searchBtn = document.getElementById('search-btn')
-const movieListSection = document.getElementById('movie-list-section')
-const searchInput = document.getElementById('search-input')
-const clearPage = document.getElementById('clear-page')
+const searchBtn = document.getElementById('search-btn');
+const movieListSection = document.getElementById('movie-list-section');
+const searchInput = document.getElementById('search-input');
+const clearPage = document.getElementById('clear-page');
 
-let myWatchlist = []
+let myWatchlist = [];
 
-document.addEventListener('click', e => {
-    if (e.target === searchBtn) {
+document.addEventListener('click', (e) => {
+  if (e.target === searchBtn) {
+    if (searchInput.value) {
+      search(searchInput.value);
 
-        if (searchInput.value) {
-
-            search(searchInput.value)
-
-            searchInput.value = ''
-        } else {
-
-            clearPage.innerHTML = `
+      searchInput.value = '';
+    } else {
+      clearPage.innerHTML = `
                 <h4>Unable to find what you're looking for.</h4>
                 <h4>Please try another search.<h4>
-            `
-        }
+            `;
     }
-    else if (e.target.dataset.add) {
+  } else if (e.target.dataset.add) {
+    const addedBtn = document.getElementById(`${e.target.dataset.add}`);
 
-        const addedBtn = document.getElementById(`${e.target.dataset.add}`)
-
-        addedBtn.innerHTML = `
+    addedBtn.innerHTML = `
             <i class="fa-solid fa-circle-check"></i>
             Added
-        `
-        addWatchlist(e.target.dataset.add)
-    }
-})
+        `;
+    addWatchlist(e.target.dataset.add);
+  }
+});
 
 async function search(inputValue) {
+  const response = await fetch(
+    `https://www.omdbapi.com/?apikey=6c14968&s=${inputValue}`
+  );
 
-    const response = await fetch(`https://www.omdbapi.com/?apikey=6c14968&s=${inputValue}`)
+  const data = await response.json();
 
-    const data = await response.json()
-
-    if (data.Search) {
-
-        getMovie(data)
-    }
+  if (data.Search) {
+    getMovie(data);
+  }
 }
 
 async function getMovieDetails(idArr) {
+  let movieObj = [];
 
-    let movieObj = []
+  for (let i = 0; i < idArr.length; i++) {
+    const response = await fetch(
+      `https://www.omdbapi.com/?apikey=6c14968&i=${idArr[i]}`
+    );
+    const data = await response.json();
+    movieObj.push(data);
+  }
 
-    for (let i = 0; i < idArr.length; i++) {
-        const response = await fetch(`https://www.omdbapi.com/?apikey=6c14968&i=${idArr[i]}`)
-        const data = await response.json()
-        movieObj.push(data)
-    }
-
-    return movieObj
+  return movieObj;
 }
 
 async function getMovie(searchResult) {
+  movieListSection.classList.remove('clear-height');
 
-    movieListSection.classList.remove('clear-height')
-
-    movieListSection.innerHTML = `
+  movieListSection.innerHTML = `
         <div id="movie-card-section" class="movie-card-section"></div>
-    `
-    let movieIds = []
+    `;
+  let movieIds = [];
 
-    searchResult.Search.forEach(id => {
+  searchResult.Search.forEach((id) => {
+    movieIds.push(id.imdbID);
+  });
 
-        movieIds.push(id.imdbID)
-    })
+  let movieId = await getMovieDetails(movieIds);
 
-    let movieId = await getMovieDetails(movieIds)
+  let movieList = ``;
 
-    let movieList = ``
-
-    movieId.forEach(result => {
-
-        movieList += `
+  movieId.forEach((result) => {
+    movieList += `
             <div id="movie-card" class="movie-card">
-                ${result.Poster != "N/A" ? `<img class="movie-image" src="${result.Poster}"/>` : `<i class="fa-regular fa-image"></i>`}
+                ${
+                  result.Poster != 'N/A'
+                    ? `<img class="movie-image" src="${result.Poster}"/>`
+                    : `<i class="fa-regular fa-image"></i>`
+                }
                 <div class="movie-text-section">
                     <div class="movie-header">
                         <h4>${result.Title}</h4>
@@ -90,7 +87,9 @@ async function getMovie(searchResult) {
                     <div class="movie-details">
                         <span>${result.Runtime}</span>
                         <span>${result.Genre}</span>
-                        <button id="${result.imdbID}" class="watchlist" data-add="${result.imdbID}">
+                        <button id="${
+                          result.imdbID
+                        }" class="watchlist" data-add="${result.imdbID}">
                             <i class="fa-solid fa-circle-plus black"></i>
                             Watchlist
                         </button>
@@ -100,26 +99,33 @@ async function getMovie(searchResult) {
                     </div>
                 </div>
             </div>
-        `
-    })
+        `;
+  });
 
-    document.getElementById('movie-card-section').innerHTML = movieList
+  document.getElementById('movie-card-section').innerHTML = movieList;
 }
 
 function addMovie(data) {
-    if (myWatchlist.filter(m => m.imdbID === data.imdbID).length === 0) {
+  if (myWatchlist.filter((m) => m.imdbID === data.imdbID).length === 0) {
+    myWatchlist.push(data);
 
-        myWatchlist.push(data)
-
-        localStorage.setItem('myWatchlist', JSON.stringify(myWatchlist))
-    }
+    localStorage.setItem('myWatchlist', JSON.stringify(myWatchlist));
+  }
 }
 
 async function addWatchlist(id) {
+  try {
+    const response = await fetch(
+      `https://www.omdbapi.com/?apikey=6c14968&i=${id}`
+    );
 
-    const response = await fetch(`https://www.omdbapi.com/?apikey=6c14968&i=${id}`)
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
 
-    const data = await response.json()
-
-    addMovie(data)
+    const data = await response.json();
+    addMovie(data);
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
